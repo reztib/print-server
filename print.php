@@ -8,8 +8,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 
 // Fehlerprotokollierung aktivieren
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors', 0); // Fehler auf der Webseite nicht anzeigen
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
 // Verzeichnisse und Log-Dateien
@@ -25,8 +25,8 @@ function log_error($message) {
     file_put_contents($errorLogFile, $formattedMessage, FILE_APPEND);
 }
 
-// Fehlernachricht initialisieren
-$errorMessage = '';
+// Erfolgsmeldung initialisieren
+$successMessage = '';
 
 // Verarbeite den Datei-Upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['upload']) && $_FILES['upload']['error'] === UPLOAD_ERR_OK) {
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['upload']) && $_FILES
             throw new Exception('Fehler beim Drucken der Datei. Überprüfe die Drucker-Konfiguration.');
         }
 
-        echo "<p>Datei erfolgreich hochgeladen und zum Drucken bereitgestellt.</p>";
+        $successMessage = "Datei erfolgreich hochgeladen und zum Drucken bereitgestellt.";
         log_error("Datei erfolgreich hochgeladen und zum Drucker gesendet: " . $_FILES['upload']['name']);
     } catch (Exception $e) {
         $errorMessage = "Fehler: " . $e->getMessage();
@@ -69,12 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['upload']) && $_FILES
     }
 }
 
-// Fehlerbereich anzeigen
-if (file_exists($errorLogFile)) {
-    $errors = file_get_contents($errorLogFile);
-    echo "<div class='error-messages'>";
-    echo "<h3>Fehlermeldungen:</h3>";
-    echo "<pre>" . htmlspecialchars($errors) . "</pre>";
+// Erfolgsbereich anzeigen
+if (!empty($successMessage)) {
+    echo "<div class='success-message'>";
+    echo "<p>" . htmlspecialchars($successMessage) . "</p>";
     echo "</div>";
 }
 ?>

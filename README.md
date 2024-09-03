@@ -1,3 +1,6 @@
-# Raspberry Pi Print Server
+# Print-Server
+Webserver, auf dem Dateien hochgeladen werden, die dann mittels CUPS (Common Unix Printing System) gedruckt werden.
 
-Dies ist ein einfaches Projekt, das einen Webserver auf einem Raspberry Pi hostet. Benutzer können Dateien hochladen, die dann über einen angeschlossenen Drucker gedruckt werden.
+Sinnvoll, falls der Drucker keinen Internetzugang hat.
+
+

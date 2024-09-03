@@ -1,4 +1,12 @@
 <?php
+session_start();
+
+// Überprüfe, ob der Benutzer angemeldet ist
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: login.php');
+    exit;
+}
+
 // Fehlerprotokollierung aktivieren
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -7,7 +15,7 @@ error_reporting(E_ALL);
 // Verzeichnisse und Log-Dateien
 $uploadDir = '/var/www/html/print-server/uploads/';
 $errorLogFile = '/var/www/html/print-server/errors/error_log.txt';
-$printCommand = 'lp'; // Kommando für den Drucker (kann angepasst werden)
+$printCommand = 'lp -d Canon_MG2500_series'; // Kommando für den Drucker
 
 // Funktion zum Protokollieren von Fehlern
 function log_error($message) {
@@ -21,7 +29,7 @@ function log_error($message) {
 $errorMessage = '';
 
 // Verarbeite den Datei-Upload
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['upload'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['upload']) && $_FILES['upload']['error'] === UPLOAD_ERR_OK) {
     $uploadFile = $uploadDir . basename($_FILES['upload']['name']);
 
     // Verzeichnis erstellen, falls nicht vorhanden
@@ -50,6 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['upload'])) {
         log_error("Datei erfolgreich hochgeladen und zum Drucker gesendet: " . $_FILES['upload']['name']);
     } catch (Exception $e) {
         $errorMessage = "Fehler: " . $e->getMessage();
+        log_error($errorMessage);
+        echo "<p>$errorMessage</p>";
+    }
+} else {
+    if (isset($_FILES['upload']) && $_FILES['upload']['error'] !== UPLOAD_ERR_OK) {
+        $errorMessage = 'Fehler beim Hochladen der Datei: ' . $_FILES['upload']['error'];
         log_error($errorMessage);
         echo "<p>$errorMessage</p>";
     }

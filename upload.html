@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Überprüfe, ob der Benutzer eingeloggt ist
+if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
+    header('Location: index.php'); // Zurück zur Login-Seite
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -11,10 +21,5 @@
         <input type="file" name="upload" required>
         <button type="submit">Hochladen</button>
     </form>
-
-    <?php
-    // Include die PHP-Datei, die Fehler aus der Log-Datei liest und anzeigt
-    include 'print.php';
-    ?>
 </body>
 </html>

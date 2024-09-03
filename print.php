@@ -1,92 +1,66 @@
 <?php
-header("Content-Type: text/html; charset=UTF-8");
+// Fehlerprotokollierung aktivieren
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Verzeichnisse und Log-Dateien
+$uploadDir = '/var/www/html/print-server/uploads/';
+$errorLogFile = '/var/www/html/print-server/errors/error_log.txt';
+$printCommand = 'lp'; // Kommando für den Drucker (kann angepasst werden)
+
+// Funktion zum Protokollieren von Fehlern
+function log_error($message) {
+    global $errorLogFile;
+    $timestamp = date('Y-m-d H:i:s');
+    $formattedMessage = "[{$timestamp}] {$message}" . PHP_EOL;
+    file_put_contents($errorLogFile, $formattedMessage, FILE_APPEND);
+}
+
+// Fehlernachricht initialisieren
+$errorMessage = '';
+
+// Verarbeite den Datei-Upload
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['upload'])) {
+    $uploadFile = $uploadDir . basename($_FILES['upload']['name']);
+
+    // Verzeichnis erstellen, falls nicht vorhanden
+    if (!file_exists($uploadDir)) {
+        if (!mkdir($uploadDir, 0755, true)) {
+            $errorMessage = 'Das Upload-Verzeichnis konnte nicht erstellt werden.';
+            log_error($errorMessage);
+            echo "<p>$errorMessage</p>";
+            exit;
+        }
+    }
+
+    try {
+        // Datei verschieben
+        if (!move_uploaded_file($_FILES['upload']['tmp_name'], $uploadFile)) {
+            throw new Exception('Die Datei konnte nicht verschoben werden. Überprüfe die Verzeichnisberechtigungen.');
+        }
+
+        // Druckbefehl ausführen
+        $printCommandResult = shell_exec($printCommand . ' ' . escapeshellarg($uploadFile));
+        if ($printCommandResult === null) {
+            throw new Exception('Fehler beim Drucken der Datei. Überprüfe die Drucker-Konfiguration.');
+        }
+
+        echo "<p>Datei erfolgreich hochgeladen und zum Drucken bereitgestellt.</p>";
+        log_error("Datei erfolgreich hochgeladen und zum Drucker gesendet: " . $_FILES['upload']['name']);
+    } catch (Exception $e) {
+        $errorMessage = "Fehler: " . $e->getMessage();
+        log_error($errorMessage);
+        echo "<p>$errorMessage</p>";
+    }
+}
+
+// Fehlerbereich anzeigen
+if (file_exists($errorLogFile)) {
+    $errors = file_get_contents($errorLogFile);
+    echo "<div class='error-messages'>";
+    echo "<h3>Fehlermeldungen:</h3>";
+    echo "<pre>" . htmlspecialchars($errors) . "</pre>";
+    echo "</div>";
+}
 ?>
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ergebnisse</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 600px;
-            width: 100%;
-            text-align: center;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .message {
-            font-size: 18px;
-            color: #333;
-        }
-        .output {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #e9ecef;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            text-align: left;
-            white-space: pre-wrap; /* Erhält Zeilenumbrüche */
-        }
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        a:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Ergebnisse</h1>
-        <?php
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
-            $file = $_FILES['file']['tmp_name'];
-            $destination = '/var/www/html/print-server/uploads/' . basename($_FILES['file']['name']);
-
-            if (move_uploaded_file($file, $destination)) {
-                // Druckername und Befehl vorbereiten
-                $printer = 'Canon_MG2500_series'; // Dein Druckername
-                $command = escapeshellcmd("lp -d $printer " . escapeshellarg($destination));
-
-                // Druckbefehl ausführen
-                exec($command, $output, $return_var);
-
-                echo "<div class='message'>Druckauftrag erfolgreich gesendet.</div>";
-                echo "<div class='output'>";
-                echo "Rückgabewert: " . htmlspecialchars($return_var) . "<br>";
-                echo "Ausgabe:<br>" . htmlspecialchars(implode("\n", $output));
-                echo "</div>";
-            } else {
-                echo "<div class='message'>Fehler beim Hochladen der Datei.</div>";
-            }
-        } else {
-            echo "<div class='message'>Keine Datei hochgeladen.</div>";
-        }
-        ?>
-        <a href="upload.html">Zurück zum Upload</a>
-    </div>
-</body>
-</html>

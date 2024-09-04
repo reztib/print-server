@@ -21,11 +21,15 @@ Notwendige Ports öffnen:
 
 ## Häufige Fehler und Lösungen
 Der Apache2-User kann standardmäßig nicht auf die Ordner `uploads` und `error` zugreifen, er muss dafür erst freigeschaltet werden:
+
 `sudo chown -R www-data:www-data /pfad/zum/print-server/uploads`
+
 `sudo chown -R www-data:www-data /pfad/zum/print-server/errors`
 
 Berechtigungen erteilen:
+
 `sudo chmod -R 755 pfad/zum/print-server/uploads`
+
 `sudo chmod -R 755 pfad/zum/print-server/errors`
 
 Diese Befehle ändern den Besitzer der Ordner zu `www-data` und setzen die Berechtigungen so, dass `www-data` vollen Zugriff hat.

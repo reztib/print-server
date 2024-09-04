@@ -23,6 +23,8 @@ Nutzername und Passwort zum Druckserver müssen in den Einstellungen des apache2
 
 (Tipp: `[IP-Adresse des Geräts]/print-server/info.php` aufrufen und dort unter "Environment" nachgucken, ob die Umgebungsvariablen richtig gesetzt wurden. Das Ganze ist der selbe Prozess wie das übliche Anlegen von Umgebungsvariablen unter Linux in `~/.bashrc`, aus Sicherheitsgründen kann apache2 aber nicht auf Umgebungsvariablen auf dem Gerät zugreifen. Aus Sicherheitsgründen gehört die Datei `info.php` danach gelöscht, da sich diese NICHT hinter einem Passwortschutz wie die anderen Seiten befindet)
 
+Hinweis: Beim erstmaligen Drucken werden die Ordner `uploads` und `errors` erstellt. Dort landen die hochgeladenen Dateien zum späteren Wiederverwenden (`uploads`) und die Error-Ausgaben (`errors`) zum Nachvollziehen, was nicht geklappt hat.
+
 ## Firewall-Einstellungen
 Notwendige Ports öffnen:
 - `sudo ufw allow 631/tcp` (Internet Printing Protocol)

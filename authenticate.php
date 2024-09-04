@@ -1,9 +1,14 @@
 <?php
 session_start();
 
-// Beispiel-Benutzername und Passwort
-$correctUsername = 'admin';
-$correctPassword = 'password123';
+// Benutzername und Passwort aus Umgebungsvariablen abrufen
+$correctUsername = getenv('PRINT_SERVER_USERNAME');
+$correctPassword = getenv('PRINT_SERVER_PASSWORD');
+
+// Überprüfen, ob die Umgebungsvariablen gesetzt sind
+if (!$correctUsername || !$correctPassword) {
+    die('Benutzername und Passwort sind nicht korrekt konfiguriert.');
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];

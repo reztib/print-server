@@ -1,51 +1,69 @@
 # Print-Server
-Webserver, auf dem Dateien hochgeladen werden, die dann mittels CUPS (Common Unix Printing System) gedruckt werden.
+Ein vielseitiger Webserver für Unix-basierte Systeme, der das Hochladen und direkte Drucken von Dateien über CUPS (ehem. Common UNIX Printing System) ermöglicht. Der Server ist ideal für Heimnetzwerke, in denen eine einfache Netzwerkdrucklösung benötigt wird.
 
 ## Hinweis
-Der Print-Server funktioniert nur, wenn der Drucker schon korrekt unter Linux eingerichtet ist. Am besten vorher mit dem Befehl `lp <druckername> <dateiname>` ausprobieren. 
-
-Sollte der Drucker noch nicht eingerichtet sein, finden sich online genug Anleitungen zum Einrichten des Druckers für jede Distribution. Dieser Server wurde auf Ubuntu getestet.
+Der Print-Server funktioniert nur, wenn der Drucker bereits unter Linux eingerichtet ist. Teste die Funktionalität mit `lp <druckername> <dateiname>`. Falls der Drucker noch nicht eingerichtet ist, stehen online zahlreiche Anleitungen zur Verfügung. Dieser Server wurde auf Ubuntu und Raspbian OS getestet, sollte aber auf jedem unixoiden Betriebssystem funktionieren. 
 
 ## Abhängigkeiten
 - **CUPS**: `sudo apt-get install cups`
-- **Webserver**: Apache (`sudo apt-get install apache2`)
+- **Webserver apache2**: `sudo apt-get install apache2`
 - **PHP**: `sudo apt-get install php php-curl php-xml php-mbstring`
 
 ## Einrichtung
-1. Benutzer zur lpadmin-Gruppe für die Druckerverwaltung hinzufügen: `sudo usermod -aG lpadmin $USER`
+1. Benutzer zur `lpadmin`-Gruppe hinzufügen, um Druckverwaltungsrechte zu erhalten
+```bash
+    sudo usermod -aG lpadmin $USER
+```
 
 2. Umgebungsvariablen für Nutzername und Passwort setzen
 
-Nutzername und Passwort zum Druckserver müssen in den Einstellungen des apache2-Webservers festgelegt werden.
+- apache2-Umgebungsvariablen bearbeiten:
+```bash
+    sudo nano /etc/apache2/envvars
+```
 
-- `sudo nano /etc/apache2/envvars`
-- Am Ende der Datei `export PRINT_SERVER_USERNAME="[Nutzername]"` und `export PRINT_SERVER_PASSWORD="[Passwort]"` hinzufügen
-- Den apache2-Webserver mit `sudo systemctl restart apache2` neustarten, damit die Umgebungsvariablen gesetzt werden
+- am Ende der Datei hinzufügen:
+```bash
+    export PRINT_SERVER_USERNAME="[Nutzername]"
+    export PRINT_SERVER_PASSWORD="[Passwort]"
+```
 
-(Tipp: Im Arbeitsverzeichnis eine phpinfo-Datei erstellen, dann `[IP-Adresse des Geräts]/print-server/info.php` aufrufen und dort unter "Environment" nachgucken, ob die Umgebungsvariablen richtig gesetzt wurden. Das Ganze ist der selbe Prozess wie das übliche Anlegen von Umgebungsvariablen unter Linux in `~/.bashrc`, aus Sicherheitsgründen kann apache2 aber nicht auf Umgebungsvariablen auf dem Gerät zugreifen. Aus Sicherheitsgründen gehört die Datei `info.php` danach gelöscht, da sich diese NICHT hinter einem Passwortschutz wie die anderen Seiten befindet)
+- apache2 neustarten:
+```bash
+    sudo systemctl restart apache2
+```
 
-Hinweis: Beim erstmaligen Drucken werden die Ordner `uploads` und `errors` erstellt. Dort landen die hochgeladenen Dateien zum späteren Wiederverwenden (`uploads`) und die Error-Ausgaben (`errors`) zum Nachvollziehen, was nicht geklappt hat.
+(Tipp: ```phpinfo```-Datei erstellen, um zu überprüfen, ob die Umgebungsvariablen richtig gesetzt wurden. Die Datei sollte aus Sicherheitsgründen danach gelöscht werden)
 
-## Firewall-Einstellungen
-Notwendige Ports öffnen:
-- `sudo ufw allow 631/tcp` (Internet Printing Protocol)
-- `sudo ufw allow 80/tcp` (HTTP)
+3. Beim ersten Druckauftrag werden die Ordner `uploads` und `errors` erstellt. `uploads` speichert die gedruckten Dokumente, `errors` speichert Fehlerprotokolle zur Diagnose
 
 ## Häufige Fehler und Lösungen
-Der apache2-User `www-data` kann standardmäßig nicht auf die Ordner `uploads` und `errors` zugreifen, er muss dafür erst freigeschaltet werden:
 
-`sudo chown -R www-data:www-data /pfad/zum/print-server/uploads`
+### Firewall-Einstellungen
+Notwendige Ports öffnen:
+**Internet Printing Protocol**: `sudo ufw allow 631/tcp`
+**HTTP**: `sudo ufw allow 80/tcp`
 
-`sudo chown -R www-data:www-data /pfad/zum/print-server/errors`
+### Zugriff auf uploads- und errors-Verzeichnisse
+Der apache2-User benötigt Zugriff auf die Verzeichnisse `uploads` und `errors`. Die Berechtigungen müssen wie folgt gesetzt sein:
 
-Berechtigungen erteilen:
+```bash
+    sudo chown -R www-data:www-data /pfad/zum/print-server/uploads
+```
 
-`sudo chmod -R 755 pfad/zum/print-server/uploads`
+```bash
+    sudo chown -R www-data:www-data /pfad/zum/print-server/errors
+```
 
-`sudo chmod -R 755 pfad/zum/print-server/errors`
+```bash
+    sudo chmod -R 755 /pfad/zum/print-server/uploads
+```
 
-Diese Befehle ändern den Besitzer der Ordner zu `www-data` und setzen die Berechtigungen so, dass `www-data` vollen Zugriff hat.
+```bash
+    sudo chmod -R 755 /pfad/zum/print-server/errors
+```
 
 ## Weitere Arbeiten
-- Verwendung dieses Servers auf einem anderen Webserver wie nginx. Ich habe das hier komplett auf meinem RaspberryPi und apache2 ausprobiert, konfiguriert und getestet, hauptsächlich aus Bequemlichkeit. Wenn es jemand hinbekommt, das hier auch auf einem nginx-Server zum laufen zu bekommen, was sich vor allem wegen den Umgebungsvariablen vielleicht als herausfordernd darstellen könnte, würde ich mich über eine Pull-Request freuen!
-- Der User muss vor Verwendung des Servers den Drucker komplett selbst eingerichtet haben. Nutzerfreundlicher wäre es, wenn der Server bei erstmaliger Ausführung alles so einrichtet, dass der Server automatisch genutzt werden kann (vielleicht über eine Art install.sh oder so???)
+**Unterstützung für andere Webserver**: Derzeit läuft der Server unter Apache auf einem Raspberry Pi. Wenn jemand den Server unter nginx oder einem anderen Webserver zum Laufen bringt, insbesondere mit den Umgebungsvariablen, freue ich mich über Pull Requests!
+
+**Automatische Druckereinrichtung**: Derzeit muss der Nutzer den Drucker vor der Verwendung des Servers selbst einrichten. Ein Installationsskript, das dies automatisiert, wäre eine hilfreiche Ergänzung.

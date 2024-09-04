@@ -41,7 +41,9 @@ Der Print-Server funktioniert nur, wenn der Drucker bereits unter Linux eingeric
 
 ### Firewall-Einstellungen
 Notwendige Ports öffnen:
+
 **Internet Printing Protocol**: `sudo ufw allow 631/tcp`
+
 **HTTP**: `sudo ufw allow 80/tcp`
 
 ### Zugriff auf uploads- und errors-Verzeichnisse
@@ -49,17 +51,8 @@ Der apache2-User benötigt Zugriff auf die Verzeichnisse `uploads` und `errors`.
 
 ```bash
     sudo chown -R www-data:www-data /pfad/zum/print-server/uploads
-```
-
-```bash
     sudo chown -R www-data:www-data /pfad/zum/print-server/errors
-```
-
-```bash
     sudo chmod -R 755 /pfad/zum/print-server/uploads
-```
-
-```bash
     sudo chmod -R 755 /pfad/zum/print-server/errors
 ```
 

@@ -1,9 +1,8 @@
 <?php
 session_start();
 
-// Überprüfe, ob der Benutzer eingeloggt ist
 if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
-    header('Location: index.php'); // Zurück zur Login-Seite
+    header('Location: index.php');
     exit;
 }
 ?>
@@ -12,14 +11,17 @@ if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Datei-Upload und Fehlerprotokollierung</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datei-Upload</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Datei-Upload</h1>
-    <form action="print.php" method="post" enctype="multipart/form-data">
-        <input type="file" name="upload" required>
-        <button type="submit">Hochladen</button>
-    </form>
+    <div class="container">
+        <h1>Datei-Upload</h1>
+        <form action="print.php" method="post" enctype="multipart/form-data">
+            <input type="file" name="upload" required>
+            <button type="submit">Hochladen</button>
+        </form>
+    </div>
 </body>
 </html>

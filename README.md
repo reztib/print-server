@@ -31,7 +31,7 @@ Notwendige Ports öffnen:
 - `sudo ufw allow 80/tcp` (HTTP)
 
 ## Häufige Fehler und Lösungen
-Der Apache2-User kann standardmäßig nicht auf die Ordner `uploads` und `error` zugreifen, er muss dafür erst freigeschaltet werden:
+Der apache2-User `www-data` kann standardmäßig nicht auf die Ordner `uploads` und `errors` zugreifen, er muss dafür erst freigeschaltet werden:
 
 `sudo chown -R www-data:www-data /pfad/zum/print-server/uploads`
 
@@ -44,3 +44,7 @@ Berechtigungen erteilen:
 `sudo chmod -R 755 pfad/zum/print-server/errors`
 
 Diese Befehle ändern den Besitzer der Ordner zu `www-data` und setzen die Berechtigungen so, dass `www-data` vollen Zugriff hat.
+
+## Weitere Arbeiten
+- Verwendung dieses Servers auf einem anderen Webserver wie nginx. Ich habe das hier komplett auf meinem RaspberryPi und apache2 ausprobiert, konfiguriert und getestet, hauptsächlich aus Bequemlichkeit. Wenn es jemand hinbekommt, das hier auch auf einem nginx-Server zum laufen zu bekommen, was sich vor allem wegen den Umgebungsvariablen vielleicht als herausfordernd darstellen könnte, würde ich mich über eine Pull-Request freuen!
+- Der User muss vor Verwendung des Servers den Drucker komplett selbst eingerichtet haben. Nutzerfreundlicher wäre es, wenn der Server bei erstmaliger Ausführung alles so einrichtet, dass der Server automatisch genutzt werden kann (vielleicht über eine Art install.sh oder so???)

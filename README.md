@@ -15,13 +15,14 @@ Sollte der Drucker noch nicht eingerichtet sein, finden sich online genug Anleit
 1. Benutzer zur lpadmin-Gruppe für die Druckerverwaltung hinzufügen: `sudo usermod -aG lpadmin $USER`
 
 2. Umgebungsvariablen für Nutzername und Passwort setzen
+
 Nutzername und Passwort zum Druckserver müssen in den Einstellungen des apache2-Webservers festgelegt werden.
 
 - `sudo nano /etc/apache2/envvars`
 - Am Ende der Datei `export PRINT_SERVER_USERNAME="[Nutzername]"` und `export PRINT_SERVER_PASSWORD="[Passwort]"` hinzufügen
 - Den apache2-Webserver mit `sudo systemctl restart apache2` neustarten, damit die Umgebungsvariablen gesetzt werden
 
-(Tipp: `[IP-Adresse des Geräts]/print-server/info.php` aufrufen und dort unter "Environment" nachgucken, ob die Umgebungsvariablen richtig gesetzt wurden. Das Ganze ist der selbe Prozess wie das übliche Anlegen von Umgebungsvariablen unter Linux in `~/.bashrc`, aus Sicherheitsgründen kann apache2 aber nicht auf Umgebungsvariablen auf dem Gerät zugreifen. Aus Sicherheitsgründen gehört die Datei `info.php` danach gelöscht, da sich diese NICHT hinter einem Passwortschutz wie die anderen Seiten befindet)
+(Tipp: Im Arbeitsverzeichnis eine phpinfo-Datei erstellen, dann `[IP-Adresse des Geräts]/print-server/info.php` aufrufen und dort unter "Environment" nachgucken, ob die Umgebungsvariablen richtig gesetzt wurden. Das Ganze ist der selbe Prozess wie das übliche Anlegen von Umgebungsvariablen unter Linux in `~/.bashrc`, aus Sicherheitsgründen kann apache2 aber nicht auf Umgebungsvariablen auf dem Gerät zugreifen. Aus Sicherheitsgründen gehört die Datei `info.php` danach gelöscht, da sich diese NICHT hinter einem Passwortschutz wie die anderen Seiten befindet)
 
 Hinweis: Beim erstmaligen Drucken werden die Ordner `uploads` und `errors` erstellt. Dort landen die hochgeladenen Dateien zum späteren Wiederverwenden (`uploads`) und die Error-Ausgaben (`errors`) zum Nachvollziehen, was nicht geklappt hat.
 

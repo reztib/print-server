@@ -1,0 +1,49 @@
+\hypertarget{authenticate_8php}{}\doxysection{authenticate.\+php-\/Dateireferenz}
+\label{authenticate_8php}\index{authenticate.php@{authenticate.php}}
+
+
+Authentifiziert den Benutzer auf Grundlage der Umgebungsvariablen.  
+
+
+\doxysubsection*{Variablen}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{authenticate_8php_ac3e950d74cda763578fc5c9255d11515}\label{authenticate_8php_ac3e950d74cda763578fc5c9255d11515}} 
+{\bfseries \$correct\+Username} = getenv(\textquotesingle{}PRINT\+\_\+\+SERVER\+\_\+\+USERNAME\textquotesingle{})
+\item 
+\mbox{\Hypertarget{authenticate_8php_a76cc15df7a0954140f24b2f6223a2185}\label{authenticate_8php_a76cc15df7a0954140f24b2f6223a2185}} 
+{\bfseries \$correct\+Password} = getenv(\textquotesingle{}PRINT\+\_\+\+SERVER\+\_\+\+PASSWORD\textquotesingle{})
+\item 
+if(! \$correct\+Username$\vert$$\vert$! \$correct\+Password) if(\$\+\_\+\+SERVER\mbox{[}\textquotesingle{}REQUEST\+\_\+\+METHOD\textquotesingle{}\mbox{]}===\textquotesingle{}POST\textquotesingle{}) \mbox{\hyperlink{authenticate_8php_a6480a4e55c935c9d881f3e94e3ca105f}{else}}
+\item 
+\mbox{\Hypertarget{authenticate_8php_a6733eb5f605d09eaede9845835d71c4e}\label{authenticate_8php_a6733eb5f605d09eaede9845835d71c4e}} 
+{\bfseries exit}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Ausführliche Beschreibung}
+Authentifiziert den Benutzer auf Grundlage der Umgebungsvariablen. 
+
+Dieses Skript prüft den Benutzernamen und das Passwort, die in den Umgebungsvariablen gespeichert sind, und authentifiziert den Benutzer. Bei erfolgreicher Anmeldung wird der Benutzer zur Upload-\/\+Seite weitergeleitet. Andernfalls wird er zur Login-\/\+Seite mit einer Fehlermeldung zurückgeleitet.
+
+
+\begin{DoxyItemize}
+\item Holt die Umgebungsvariablen für den Benutzernamen und das Passwort ab.
+\item Überprüft, ob der Benutzer authentifiziert ist.
+\item Leitet den Benutzer weiter basierend auf der Authentifizierung. 
+\end{DoxyItemize}
+
+\doxysubsection{Variablen-\/\+Dokumentation}
+\mbox{\Hypertarget{authenticate_8php_a6480a4e55c935c9d881f3e94e3ca105f}\label{authenticate_8php_a6480a4e55c935c9d881f3e94e3ca105f}} 
+\index{authenticate.php@{authenticate.php}!else@{else}}
+\index{else@{else}!authenticate.php@{authenticate.php}}
+\doxysubsubsection{\texorpdfstring{else}{else}}
+{\footnotesize\ttfamily if(! \$correct\+Username$\vert$$\vert$! \$correct\+Password) if ( \$\+\_\+\+SERVER\mbox{[} \textquotesingle{}REQUEST\+\_\+\+METHOD\textquotesingle{}\mbox{]}===\textquotesingle{}POST\textquotesingle{}) else}
+
+{\bfseries Initialisierung\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    header(\textcolor{stringliteral}{'Location: index.php'})}
+
+\end{DoxyCode}

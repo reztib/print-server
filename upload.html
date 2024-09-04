@@ -1,4 +1,16 @@
 <?php
+/**
+ * @file upload.html
+ * @brief Seite für den Datei-Upload zum Druck.
+ *
+ * Diese Seite ermöglicht es dem Benutzer, eine Datei hochzuladen, die dann zum Drucken 
+ * weiterverarbeitet wird. Der Zugriff auf diese Seite ist nur authentifizierten Benutzern erlaubt.
+ *
+ * @details 
+ * - Überprüft, ob der Benutzer eingeloggt ist.
+ * - Bietet ein Formular für den Datei-Upload.
+ */
+
 session_start();
 
 if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
@@ -6,7 +18,6 @@ if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
     exit;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -24,4 +35,5 @@ if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
         </form>
     </div>
 </body>
+
 </html>

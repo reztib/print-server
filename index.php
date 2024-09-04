@@ -1,4 +1,16 @@
 <?php
+/**
+ * @file index.php
+ * @brief Startseite des Print-Servers, auf der sich Benutzer anmelden können.
+ *
+ * Diese Seite dient als Login-Seite für den Print-Server. 
+ * Angemeldete Benutzer werden automatisch zur Upload-Seite weitergeleitet.
+ *
+ * @details 
+ * - Überprüft, ob der Benutzer bereits eingeloggt ist.
+ * - Leitet eingeloggt Benutzer zur Upload-Seite weiter.
+ */
+
 session_start();
 
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']) {

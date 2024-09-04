@@ -1,4 +1,19 @@
 <?php
+/**
+ * @file print.php
+ * @brief Verarbeitet den Datei-Upload und sendet die Datei an den Drucker.
+ *
+ * Dieses Skript ermöglicht es einem authentifizierten Benutzer, eine Datei hochzuladen, die dann automatisch 
+ * an den Drucker gesendet wird. Fehler während des Uploads oder Druckvorgangs werden protokolliert und 
+ * entsprechende Meldungen werden dem Benutzer angezeigt.
+ *
+ * @details 
+ * - Prüft die Authentifizierung des Benutzers.
+ * - Verarbeitet den Datei-Upload und verschiebt die Datei in das Upload-Verzeichnis.
+ * - Sendet die Datei an den Drucker.
+ * - Protokolliert Fehler und zeigt Erfolgsmeldungen an.
+ */
+
 session_start();
 
 // Überprüfe, ob der Benutzer angemeldet ist
@@ -8,7 +23,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 
 // Fehlerprotokollierung aktivieren
-ini_set('display_errors', 0); // Fehler auf der Webseite nicht anzeigen
+ini_set('display_errors', 1); // Fehler auf der Webseite nicht anzeigen
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
@@ -17,7 +32,11 @@ $uploadDir = '/var/www/html/print-server/uploads/';
 $errorLogFile = '/var/www/html/print-server/errors/error_log.txt';
 $printCommand = 'lp -d Canon_MG2500_series'; // Kommando für den Drucker
 
-// Funktion zum Protokollieren von Fehlern
+/**
+ * @brief Protokolliert Fehler in einer Log-Datei.
+ * 
+ * @param message Die Fehlermeldung, die protokolliert werden soll.
+ */
 function log_error($message) {
     global $errorLogFile;
     $timestamp = date('Y-m-d H:i:s');
@@ -75,4 +94,3 @@ if (!empty($successMessage)) {
     echo "<p>" . htmlspecialchars($successMessage) . "</p>";
     echo "</div>";
 }
-?>

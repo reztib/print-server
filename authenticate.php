@@ -1,4 +1,18 @@
 <?php
+/**
+ * @file authenticate.php
+ * @brief Authentifiziert den Benutzer auf Grundlage der Umgebungsvariablen.
+ *
+ * Dieses Skript prüft den Benutzernamen und das Passwort, die in den Umgebungsvariablen gespeichert sind, 
+ * und authentifiziert den Benutzer. Bei erfolgreicher Anmeldung wird der Benutzer zur Upload-Seite weitergeleitet. 
+ * Andernfalls wird er zur Login-Seite mit einer Fehlermeldung zurückgeleitet.
+ *
+ * @details 
+ * - Holt die Umgebungsvariablen für den Benutzernamen und das Passwort ab.
+ * - Überprüft, ob der Benutzer authentifiziert ist.
+ * - Leitet den Benutzer weiter basierend auf der Authentifizierung.
+ */
+
 session_start();
 
 // Benutzername und Passwort aus Umgebungsvariablen abrufen
@@ -28,4 +42,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: index.php');
     exit;
 }
-?>

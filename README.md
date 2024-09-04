@@ -57,6 +57,6 @@ Der apache2-User benötigt Zugriff auf die Verzeichnisse `uploads` und `errors`.
 ```
 
 ## Weitere Arbeiten
-**Unterstützung für andere Webserver**: Derzeit läuft der Server unter Apache auf einem Raspberry Pi. Wenn jemand den Server unter nginx oder einem anderen Webserver zum Laufen bringt, freue ich mich über Pull Requests!
+**Unterstützung für andere Webserver**: Bei mir läuft der Server unter Apache auf einem Raspberry Pi. Wenn jemand den Server unter nginx oder einem anderen Webserver zum Laufen bringt, freue ich mich über Pull Requests!
 
 **Automatische Druckereinrichtung**: Derzeit muss der Nutzer den Drucker vor der Verwendung des Servers selbst einrichten. Ein Installationsskript, das dies automatisiert, wäre eine hilfreiche Ergänzung.
